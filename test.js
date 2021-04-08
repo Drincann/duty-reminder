@@ -25,7 +25,7 @@ async function remind(bot, group) {
     const bot = new Bot();
     await bot.open({ baseUrl, qq, authKey, });
 
-    bot.on('GroupMessage', new Middleware().groupFilter([group]).textProcessor()
+    bot.on('GroupMessage', new Middleware().groupFilter([Number.parseInt(group)]).textProcessor()
         .use((data, next) => {
             data.remind = () => {
                 remind(bot, data.sender.group.id);
