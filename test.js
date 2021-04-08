@@ -23,7 +23,6 @@ async function remind(bot, group) {
 
     // bot
     const bot = new Bot();
-    const qq = 3070539027;
     await bot.open({ baseUrl, qq, authKey, });
 
     bot.on('GroupMessage', new Middleware().groupFilter([group]).textProcessor()
