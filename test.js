@@ -17,7 +17,7 @@ async function remind(bot, group) {
 
 
 (async () => {
-	const { appid, appkey, authKey, baseUrl, qq, group } = JSON.parse(require('fs').readFileSync('./config.json')) 
+    const { appid, appkey, authKey, baseUrl, qq, group } = JSON.parse(require('fs').readFileSync('./config.json'))
     // leancloud
     await data.init(appid, appkey);
 
@@ -35,32 +35,38 @@ async function remind(bot, group) {
         })
         .done(
             async ({ remind, text, sender: { id: friend, group: { id: group } } }) => {
-                console.log(new Date().toLocaleString() + '> ' + text);
-                const matchResult = text.match(/^\/([a-z]+)\s*(.*)/);
-                if (matchResult) {
-                    if (matchResult[1] === 'skip') {
-                        // 跳过
-                        if (matchResult[2] === 'prev') {
-                            // 上一个
-                            let { index } = await data.getCurrentInfo();
-                            await data.updateCurrent(index - 1);
-                        } else if (matchResult[2] === 'next') {
-                            //下一个
-                            let { index } = await data.getCurrentInfo();
-                            await data.updateCurrent(index + 1);
-                        } else {
-                            // 未知
-                            bot.sendMessage({
-                                group,
-                                message: new Message().addAt(friend).addText('你写了个鸡掰啊，看不懂')
-                            });
+                try {
+                    console.log(new Date().toLocaleString() + '> ' + text);
+                    const matchResult = text.match(/^\/([a-z]+)\s*(.*)/);
+                    if (matchResult) {
+                        if (matchResult[1] === 'skip') {
+                            // 跳过
+                            if (matchResult[2] === 'prev') {
+                                // 上一个
+                                let { index } = await data.getCurrentInfo();
+                                await data.updateCurrent(index - 1);
+                            } else if (matchResult[2] === 'next') {
+                                //下一个
+                                let { index } = await data.getCurrentInfo();
+                                await data.updateCurrent(index + 1);
+                            } else {
+                                // 未知
+                                bot.sendMessage({
+                                    group,
+                                    message: new Message().addAt(friend).addText('你写了个鸡掰啊，看不懂')
+                                });
+                            }
+                        } else if (matchResult[1] === 'duty') {
+                            // 提醒今日值日
+                            remind();
                         }
-                    } else if (matchResult[1] === 'duty') {
-                        // 提醒今日值日
-                        remind();
-                    }
-                }// if
-
+                    }// if
+                } catch (error) {
+                    bot.sendMessage({
+                        group,
+                        message: new Message().addAt(friend).addText(error.message)
+                    });
+                }
             }// callback
         )// done
     );// on
