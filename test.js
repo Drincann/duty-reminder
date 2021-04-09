@@ -26,9 +26,9 @@ async function remind(bot, group) {
     await bot.open({ baseUrl, qq, authKey, });
 
     bot.on('GroupMessage', new Middleware().groupFilter([Number.parseInt(group)]).textProcessor()
-        .use((data, next) => {
-            data.remind = () => {
-                remind(bot, data.sender.group.id);
+        .use(async (data, next) => {
+            data.remind = async () => {
+                await remind(bot, data.sender.group.id);
             };
             next();
         })
@@ -57,7 +57,7 @@ async function remind(bot, group) {
                             }
                         } else if (matchResult[1] === 'duty') {
                             // 提醒今日值日
-                            remind();
+                            await remind();
                         }
                     }// if
                 } catch (error) {
