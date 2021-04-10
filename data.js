@@ -61,7 +61,7 @@ async function updateCurrent(updateIndex) {
     const currentMember = AV.Object.createWithoutData('currentMember', id);
 
     currentMember.set('index', generator(1, count)(index));
-    currentMember.save();
+    await currentMember.save();
 
     return currentMember.get('index');
 }
