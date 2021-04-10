@@ -44,10 +44,12 @@ async function remind(bot, group) {
                                 // 上一个
                                 let { index } = await data.getCurrentInfo();
                                 await data.updateCurrent(index - 1);
+                                await remind();
                             } else if (matchResult[2] === 'next') {
                                 //下一个
                                 let { index } = await data.getCurrentInfo();
                                 await data.updateCurrent(index + 1);
+                                await remind();
                             } else {
                                 // 未知
                                 bot.sendMessage({
