@@ -1,5 +1,4 @@
 const fs = require('fs');
-const AV = require('leancloud-storage');
 const path = require('path');
 let MemberList = null;
 let WordsList = null;
